@@ -8,8 +8,11 @@ valve_state_commanded = False
 valve_apperture_commanded = 0
 compressor_pwr_commanded = False
 power_sequence_step = 0
-last_valve_apperture = 0
-
+last_apperture_sent = 0
+new_apperture_ready = True
+valve_locked = True
+valve_apperture = 0
+is_locked = False
 
 def valve_open_cmd(data):
     global valve_state_commanded
@@ -17,7 +20,9 @@ def valve_open_cmd(data):
 
 def valve_apperture_cmd(data):
     global valve_apperture_commanded
+    global new_apperture_ready
     valve_apperture_commanded = data.data
+    new_apperture_ready = True
 
 def compressor_pwr_cmd_cb(data):
     global compressor_pwr_commanded
@@ -28,7 +33,11 @@ def point():
     global valve_apperture_commanded
     global valve_state_commanded
     global power_sequence_step
-    global last_valve_apperture
+    global last_apperture_sent
+    global new_apperture_ready
+    global valve_locked
+    global valve_apperture
+    global is_locked
 
     compressor_state = False #TODO make this a topic published by micro
 
@@ -54,11 +63,16 @@ def point():
     dt = 0
 
     while not rospy.is_shutdown():
-       
+         
+        if valve_state_commanded == True:
+            valve_apperture = valve_apperture_commanded
+        else:
+            valve_apperture = VALVE_APPERTURE_CLOSED
+ 
         if compressor_pwr_commanded == True and compressor_state == False: #Powering up
             if power_sequence_step == 0:
+                valve_locked = True
                 rospy.loginfo("Closing valve...")
-                valve_apperture = int(VALVE_APPERTURE_CLOSED)
                 valve_timer = time.time() + (VALVE_SERVO_TIMER/1000)
                 power_sequence_step += 1
 
@@ -66,9 +80,9 @@ def point():
                 if(time.time() >= valve_timer):
                     power_sequence_step += 1
                     rospy.loginfo("Valve closed.")
-            
+
             elif power_sequence_step == 2:
-                rospy.loginfo("Compressor warming up...")
+                rospy.loginfo("Compressor is starting...")
                 data = Bool()
                 data.data = True
                 compressor_pub.publish(data)
@@ -80,19 +94,21 @@ def point():
                     rospy.loginfo("Compressor started.")
                     compressor_state = True
                     power_sequence_step = 0
+                    valve_locked = False
+
 
         elif compressor_pwr_commanded == False and compressor_state == True:
             if power_sequence_step == 0:
                 rospy.loginfo("Closing valve...")
-                valve_apperture = int(VALVE_APPERTURE_CLOSED)
                 valve_timer = time.time() + (VALVE_SERVO_TIMER/1000)
                 power_sequence_step += 1
+                valve_locked = True
 
             elif power_sequence_step == 1:
                 if(time.time() >= valve_timer):
                     power_sequence_step += 1
                     rospy.loginfo("Valve closed.")
-            
+
             elif power_sequence_step == 2:
                 rospy.loginfo("Compressor is stopping...")
                 data = Bool()
@@ -106,21 +122,18 @@ def point():
                     rospy.loginfo("Compressor stopped.")
                     compressor_state = False
                     power_sequence_step = 0
-
-        if valve_state_commanded == True and compressor_state == True:
-            valve_apperture = valve_apperture_commanded
-            rospy.loginfo("New apperture set.")
-
-        else:
-            valve_apperture = int(VALVE_APPERTURE_CLOSED)
-            rospy.loginfo("Cannot change apperture.")
-       
-        if valve_apperture != last_valve_apperture:
+        
+        if valve_locked == True:
+            valve_apperture = VALVE_APPERTURE_CLOSED
+        
+        if(last_apperture_sent != valve_apperture):
             data = UInt32()
+            rospy.loginfo("New apperture set: %d", valve_apperture)
             data.data = valve_apperture
             spray_pub.publish(data)
-            last_valve_apperture = valve_apperture
+            last_apperture_sent = valve_apperture
             rospy.loginfo("New apperture sent.")
+
 
 
 if __name__=='__main__':
