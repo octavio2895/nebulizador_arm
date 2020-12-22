@@ -1,0 +1,25 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "",
+        "limitSymbolsToIncludedHeaders": true
+      },
+      "includePath": [
+        "/home/victor/catkin_ws/devel/include",
+        "/opt/ros/melodic/include",
+        "/home/victor/catkin_ws/src/anubis/anubis_description/include",
+        "/home/victor/catkin_ws/src/anubis_nav/include",
+        "/home/victor/catkin_ws/src/anubis_pid/include",
+        "/home/victor/catkin_ws/src/husky/husky_base/include",
+        "/home/victor/catkin_ws/src/nebulizador_arm/include",
+        "/home/victor/catkin_ws/src/occhibot/include",
+        "/home/victor/catkin_ws/src/python_tuto/include",
+        "/home/victor/catkin_ws/src/rr_openrover_stack/rr_openrover_driver/include",
+        "/home/victor/catkin_ws/src/rr_openrover_stack/vp_anubis_navigation/include",
+        "/usr/include"
+      ],
+      "name": "Linux"
+    }
+  ]
+}

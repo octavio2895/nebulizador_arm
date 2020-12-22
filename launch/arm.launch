@@ -10,7 +10,6 @@
     <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
     <!--node name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui"/-->
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
-    <node name="trajectory_msgs" pkg="trajectory_msgs" type="trajectory_msgs"/>
 
 
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)"  required="true" />
