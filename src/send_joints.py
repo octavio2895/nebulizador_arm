@@ -26,6 +26,7 @@ if __name__ == "__main__":
       # Tiempo actual (necesario como indicador para ROS)
       jstate.header.stamp = rospy.Time.now()
       # Publicar mensaje
+      rospy.loginfo(jstate)
       pub.publish(jstate)
       # Esperar hasta la siguiente iteracion
       rate.sleep()

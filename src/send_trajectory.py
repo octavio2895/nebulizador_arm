@@ -1,9 +1,8 @@
-#! /usr/bin/env python
+#!/usr/bin/env python
 
-import roslib
 import rospy, math, time
-from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 
+from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 
 def jointTrajectoryCommand():
     # Initialize the node
@@ -15,16 +14,15 @@ def jointTrajectoryCommand():
         print rospy.get_rostime().to_sec()
 
     pub = rospy.Publisher('/joint_trajectory', JointTrajectory, queue_size=10)
-
     jt = JointTrajectory()
 
     jt.header.stamp = rospy.Time.now()
     jt.header.frame_id = "base"
 
-    jt.joint_names.append("joint_0")
-    jt.joint_names.append("joint_1")
-
-    n = 1500
+    jt.joint_names.append("joint_0" )
+    jt.joint_names.append("joint_1" )
+    
+    n = 15
     dt = 0.01
     rps = 0.05
     for i in range (n):
@@ -35,32 +33,7 @@ def jointTrajectoryCommand():
 
         p.positions.append(x1)
         p.positions.append(x2)
-        p.positions.append(x2)
-        p.positions.append(x2)
-        p.positions.append(x2)
-        p.positions.append(x2)
-        p.positions.append(x1)
-        p.positions.append(x2)
-        p.positions.append(x1)
-        p.positions.append(x1)
-        p.positions.append(x2)
-        p.positions.append(x1)
-        p.positions.append(x2)
-        p.positions.append(x1)
-        p.positions.append(x1)
-        p.positions.append(x2)
-        p.positions.append(x2)
-        p.positions.append(x1)
-        p.positions.append(x1)
-        p.positions.append(x1)
-        p.positions.append(x2)
-        p.positions.append(x2)
-        p.positions.append(x2)
-        p.positions.append(x1)
-        p.positions.append(x1)
-        p.positions.append(x2)
-        p.positions.append(x1)
-        p.positions.append(x1)
+        
         jt.points.append(p)
 
         # set duration
