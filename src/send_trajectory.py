@@ -13,14 +13,14 @@ def jointTrajectoryCommand():
         time.sleep(0.1)
         print rospy.get_rostime().to_sec()
 
-    pub = rospy.Publisher('/joint_trajectory', JointTrajectory, queue_size=10)
+    pub = rospy.Publisher('/arm_twist', JointTrajectory, queue_size=10)
     jt = JointTrajectory()
 
     jt.header.stamp = rospy.Time.now()
-    jt.header.frame_id = "base"
+    jt.header.frame_id = "arm"
 
-    jt.joint_names.append("joint_0" )
-    jt.joint_names.append("joint_1" )
+    jt.joint_names.append("joint_azim" )
+    jt.joint_names.append("joint_elev" )
     
     n = 15
     dt = 0.01

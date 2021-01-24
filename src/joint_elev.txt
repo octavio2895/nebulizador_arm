@@ -1,0 +1,11 @@
+
+p.positions[-0.785398]
+p.positions[-0.610865]
+p.positions[-0.436332]
+p.positions[-0.261799]
+p.positions[-0.087266]
+p.positions[0.087266]
+p.positions[0.261799]
+p.positions[0.436332]
+p.positions[0.610865]
+p.positions[0.785398]
