@@ -1,4 +1,4 @@
-#! /usr/bin/python
+#!/usr/bin/env python
 from getkey import getkey, keys
 import rospy, math, time
 from std_msgs.msg import UInt32
