@@ -66,7 +66,7 @@ def point():
             p = JointTrajectoryPoint()
             i = ang1*np.sin((vel_1*dt)*2*np.pi) + ang1_offset
             j = ang2*np.sin((vel_2*dt)*2*np.pi) + ang2_offset
-            k = vel_1*2*np.pi*ang2*np.cos((vel_1*dt)*2*np.pi)
+            k = vel_1*2*np.pi*ang1*np.cos((vel_1*dt)*2*np.pi)
             l = vel_2*2*np.pi*ang2*np.cos((vel_2*dt)*2*np.pi)
             p.positions = [i,j]
             p.velocities = [k,l]
