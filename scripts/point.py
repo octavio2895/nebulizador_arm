@@ -17,18 +17,37 @@ def point():
     rospy.init_node('point_control')
 
     pub = rospy.Publisher('/arm_twist', JointTrajectoryPoint, queue_size=10)
-    rospy.Subscriber('/arm_star_stop', Bool, run_cb)
+    rospy.Subscriber('/arm_start_stop', Bool, run_cb)
 
-    ang1 = np.pi*2
-    ang2 = np.pi*3/4
+    grados_joint_azim = rospy.get_param("/grados_joint_azim")
+    rospy.loginfo("%s is %s", rospy.resolve_name('grados_joint_azim'), grados_joint_azim)
 
-    ang1_offset = np.pi*2
-    ang2_offset = np.pi*3/4
+    grados_joint_elev = rospy.get_param("/grados_joint_elev")
+    rospy.loginfo("%s is %s", rospy.resolve_name("/grados_joint_elev"),grados_joint_elev)
+
+    ang1 = grados_joint_azim*np.pi/180 #np.pi*2
+    ang2 = grados_joint_elev*np.pi/180 #np.pi*3/4
+
+    offset_joint_azim = rospy.get_param("/offset_joint_azim")
+    rospy.loginfo("%s is %s", rospy.resolve_name("/offset_joint_azim"), offset_joint_azim)
+
+    offset_joint_elev = rospy.get_param("/offset_joint_elev")
+    rospy.loginfo("%s is %s", rospy.resolve_name("/offset_joint_elev"), offset_joint_elev)
+
+    ang1_offset = offset_joint_azim*np.pi/180 #np.pi*2
+    ang2_offset = offset_joint_elev*np.pi/180 #np.pi*3/4
+
 
     pub_period = 0.1
 
-    vel_1 = 0.25 #rad/s
-    vel_2 = 0.10
+    vel_1 = rospy.get_param("/vel_1")
+    rospy.loginfo("%s is %s", rospy.resolve_name('/vel_1'),vel_1)
+
+    vel_2 = rospy.get_param("/vel_2")
+    rospy.loginfo("%s is %s", rospy.resolve_name('/vel_2'),vel_2)
+
+    #vel_1 = 0.25 #rad/s
+    #vel_2 = 0.10
 
     #pas1 = 10*np.pi/180
     #pas2 = 20*np.pi/180
@@ -47,8 +66,10 @@ def point():
             p = JointTrajectoryPoint()
             i = ang1*np.sin((vel_1*dt)*2*np.pi) + ang1_offset
             j = ang2*np.sin((vel_2*dt)*2*np.pi) + ang2_offset
+            k = vel_1*2*np.pi*ang2*np.cos((vel_1*dt)*2*np.pi)
+            l = vel_2*2*np.pi*ang2*np.cos((vel_2*dt)*2*np.pi)
             p.positions = [i,j]
-            p.velocities = [0,0]
+            p.velocities = [k,l]
             p.accelerations = [0,0]
             p.time_from_start = rospy.Time.now()
 

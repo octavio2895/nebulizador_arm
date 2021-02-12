@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<launch>
+    <param name="vel_1" value="0.25"/>
+    <param name="vel_2" value="0.10"/>
+    <!--All parameters in degree-->
+    <param name="grados_joint_azim" value="360"/>
+    <param name="grados_joint_elev" value="270"/>
+    <param name="offset_joint_azim" value="360"/>
+    <param name="offset_joint_elev" value="270"/>
+
+    <node name="point_control" pkg="nebulizador_arm" type="point.py" output="screen"/>
+    <node name="star_stop" pkg="nebulizador_arm" type="arm_start_stop.py" output="screen"/>
+</launch>

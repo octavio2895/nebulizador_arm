@@ -4,6 +4,9 @@
         <param name="port" value="/dev/ttyACM0"/>
         <param name="baud" value="57600"/>
     </node>
+
+    <param name="vel_1" value="0.25"/>
+    <param name="vel_2" value="0.10"/>
     
     <node name="point_control" pkg="nebulizador_arm" type="point.py" output="screen"/>
 </launch>

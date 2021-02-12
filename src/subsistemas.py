@@ -23,6 +23,7 @@ def startneb():
         pub.publish(pwr_state)
         rate.sleep()
     rospy.spin()
+    pub
 
 if __name__== '__main__':
     try:
