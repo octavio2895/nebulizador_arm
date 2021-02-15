@@ -7,6 +7,7 @@ from std_msgs.msg import Float64
 
 run_var =False
 pwr_state = False
+home = False
 
 def wind():
     rospy.init_node('start_stop', anonymous=True)
@@ -14,11 +15,12 @@ def wind():
     pub1 = rospy.Publisher('/vel_1', Float64, queue_size=10)
     pub2 = rospy.Publisher('/vel_2', Float64, queue_size=10)
     pub3 = rospy.Publisher('/compressor_pwr', Bool, queue_size=10)
+    pub4 = rospy.Publisher('/home_axis', Bool, queue_size=10)
     rate = rospy.Rate(10)
 
     window = Tk()
     window.title("Arm Start and Stop")
-    window.geometry('250x250')
+    window.geometry('300x250')
     lbl1 = Label(window, text="Start stop")
     lbl2 = Label(window, text="Compressor pwr")
     lbl1.grid(column=0, row=0)
@@ -60,6 +62,15 @@ def wind():
 
     btn4 = Button(window, text="Stop", command=clicked4)
 
+    def clicked5():
+        global home
+        home = True
+        rospy.loginfo(home)
+        pub4.publish(home)
+        rate.sleep()
+
+    btn5 = Button(window, text="Home", command=clicked5)
+
     vel_1s = DoubleVar()
     vel_1s.set(0.15)
     def vel_1_c(vel_1):
@@ -96,6 +107,7 @@ def wind():
     btn2.grid(column=2, row=0)
     btn3.grid(column=1, row=2)
     btn4.grid(column=2, row=2)
+    btn5.grid(column=2, row=4)
 
     w1.grid(column=0, row=3)
     w2.grid(column=0, row=4)
