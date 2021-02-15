@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <launch>
-    <param name="vel_1" value="0.25"/>
-    <param name="vel_2" value="0.10"/>
+    <param name="vel_1" value="0.15"/>
+    <param name="vel_2" value="0.20"/>
     <!--All parameters in degree-->
     <param name="grados_joint_azim" value="360"/> <!--360-->
     <param name="grados_joint_elev" value="45"/> <!--45-->

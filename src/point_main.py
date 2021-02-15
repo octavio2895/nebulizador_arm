@@ -3,13 +3,8 @@ import numpy as np
 import rospy, math, time
 from std_msgs.msg import Bool
 from std_msgs.msg import UInt16
-from std_msgs.msg import Float64
 from trajectory_msgs.msg import JointTrajectoryPoint
 run_var = False
-azim = 0
-elev = 0
-vel_1 = 0.15
-vel_2 = 0.20
 
 def run_cb(data):
     global run_var 
@@ -18,37 +13,12 @@ def run_cb(data):
         run_var = True
     else:
         run_var = False
-def offset_joint_azim_cb(data):
-    rospy.loginfo(data.data)
-    global azim
-    azim = data.data
-
-def offset_joint_elev_cb(data):
-    rospy.loginfo(data.data)
-    global elev
-    elev = data.data
-
-def vel_1_cb(data):
-    rospy.loginfo(data.data)
-    global vel_1
-    vel_1 = data.data
-
-def vel_2_cb(data):
-    rospy.loginfo(data.data)
-    global vel_2
-    vel_2 = data.data
 
 def point():
     rospy.init_node('point_control')
 
     pub = rospy.Publisher('/arm_twist', JointTrajectoryPoint, queue_size=10)
     rospy.Subscriber('/arm_start_stop', Bool, run_cb)
-
-    rospy.Subscriber("/offset_joint_azim", UInt16, offset_joint_azim_cb)
-    rospy.Subscriber("/offset_joint_elev", UInt16, offset_joint_elev_cb)
-    
-    rospy.Subscriber("/vel_1", Float64, vel_1_cb)
-    rospy.Subscriber("/vel_2", Float64, vel_2_cb)
 
     grados_joint_azim = rospy.get_param("/grados_joint_azim")
     rospy.loginfo("%s is %s", rospy.resolve_name('grados_joint_azim'), grados_joint_azim)
@@ -71,17 +41,27 @@ def point():
 
     pub_period = 0.05
 
-    #vel_1 = rospy.get_param("/vel_1")
-    #rospy.loginfo("%s is %s", rospy.resolve_name('/vel_1'),vel_1)
+    vel_1 = rospy.get_param("/vel_1")
+    rospy.loginfo("%s is %s", rospy.resolve_name('/vel_1'),vel_1)
 
-    #vel_2 = rospy.get_param("/vel_2")
-    #rospy.loginfo("%s is %s", rospy.resolve_name('/vel_2'),vel_2)
+    vel_2 = rospy.get_param("/vel_2")
+    rospy.loginfo("%s is %s", rospy.resolve_name('/vel_2'),vel_2)
+
+    #vel_1 = 0.25 #rad/s
+    #vel_2 = 0.10
+
+    #pas1 = 10*np.pi/180
+    #pas2 = 20*np.pi/180
+
+    #max1 = ang1 + pas2
+    #max2 = ang2 + pas1
 
     start_time = time.time()
     time.sleep(0.01)
     next_point_time = 0
     dt = 0
     while not rospy.is_shutdown():
+        #print(run_var)
         if(time.time() > next_point_time) and run_var==True:
             dt = time.time() - start_time
             p = JointTrajectoryPoint()
@@ -96,9 +76,31 @@ def point():
 
             rospy.loginfo("point \n %s ", p)
             pub.publish(p)
+            # rospy.spin()
             next_point_time = time.time() + pub_period
         elif run_var == False:
             start_time = time.time() + dt
+
+    # x1 =np.arange(-1*ang1,max1,pas2)
+    # print(x1)
+    # x2 =np.arange(-1*ang2,max2,pas1)
+    
+    # for i, j in zip(x1, x2):
+    #     p = JointTrajectoryPoint()
+    #     p.positions = [i,j]
+    #     p.velocities = [0,0]
+    #     p.accelerations = [0,0]
+    #     p.time_from_start = rospy.Time.now()
+
+    #     rospy.loginfo("point \n %s ", p)
+    #     rospy.sleep(1)
+    #     pub.publish(p)
+    
+    # #while not rospy.is_shutdown():
+    # #rospy.loginfo("point \n %s ", p)
+    # #rospy.sleep(1)
+    # #pub.publish(p)
+    # rospy.spin()
 
 if __name__=='__main__':
     try:

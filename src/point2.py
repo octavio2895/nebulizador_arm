@@ -3,13 +3,10 @@ import numpy as np
 import rospy, math, time
 from std_msgs.msg import Bool
 from std_msgs.msg import UInt16
-from std_msgs.msg import Float64
 from trajectory_msgs.msg import JointTrajectoryPoint
 run_var = False
 azim = 0
 elev = 0
-vel_1 = 0.15
-vel_2 = 0.20
 
 def run_cb(data):
     global run_var 
@@ -47,8 +44,8 @@ def point():
     rospy.Subscriber("/offset_joint_azim", UInt16, offset_joint_azim_cb)
     rospy.Subscriber("/offset_joint_elev", UInt16, offset_joint_elev_cb)
     
-    rospy.Subscriber("/vel_1", Float64, vel_1_cb)
-    rospy.Subscriber("/vel_2", Float64, vel_2_cb)
+    rospy.Subscriber("/vel_1", UInt16, vel_1_cb)
+    rospy.Subscriber("/vel_2", UInt16, vel_2_cb)
 
     grados_joint_azim = rospy.get_param("/grados_joint_azim")
     rospy.loginfo("%s is %s", rospy.resolve_name('grados_joint_azim'), grados_joint_azim)
@@ -71,11 +68,11 @@ def point():
 
     pub_period = 0.05
 
-    #vel_1 = rospy.get_param("/vel_1")
-    #rospy.loginfo("%s is %s", rospy.resolve_name('/vel_1'),vel_1)
+    vel_1 = rospy.get_param("/vel_1")
+    rospy.loginfo("%s is %s", rospy.resolve_name('/vel_1'),vel_1)
 
-    #vel_2 = rospy.get_param("/vel_2")
-    #rospy.loginfo("%s is %s", rospy.resolve_name('/vel_2'),vel_2)
+    vel_2 = rospy.get_param("/vel_2")
+    rospy.loginfo("%s is %s", rospy.resolve_name('/vel_2'),vel_2)
 
     start_time = time.time()
     time.sleep(0.01)
