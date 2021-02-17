@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #Arm v0.1
-from Tkinter import *
+from Tkinter import * # Tkinter en python 2.7 y tkinter en python 3. >>
 import rospy, math, time
 from std_msgs.msg import Bool
 from std_msgs.msg import Float64
@@ -9,7 +9,8 @@ run_var =False
 pwr_state = False
 home = False
 
-def wind():
+def wind(): 
+    
     rospy.init_node('start_stop', anonymous=True)
     pub = rospy.Publisher('/arm_start_stop', Bool, queue_size=10)
     pub1 = rospy.Publisher('/vel_1', Float64, queue_size=10)
