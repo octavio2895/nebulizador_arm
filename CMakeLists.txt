@@ -168,8 +168,8 @@ include_directories(
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
-catkin_install_python(PROGRAMS scripts/valve.py
-DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+ catkin_install_python(PROGRAMS scripts/valve.py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
 ## Mark executables for installation
