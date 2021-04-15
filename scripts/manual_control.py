@@ -82,7 +82,7 @@ def point():
 
     pub = rospy.Publisher('/arm_twist', JointTrajectoryPoint, queue_size=10)
     rospy.Subscriber('/arm_start_stop', Bool, run_cb)
-    rospy.Subscriber("/joystick", Joy, joy_cb)
+    rospy.Subscriber("/joystick_local", Joy, joy_cb)
 
     MAX_AZIM = rospy.get_param("/max_azimuth", np.pi*2)
     MIN_AZIM = rospy.get_param("/min_azimuth", -np.pi*2)
