@@ -19,6 +19,8 @@ dt = 0
 previous_t = 0
 commanded_elev = 0
 commanded_azim = 0
+cb_delta_t = 0
+
 def run_cb(data):
     global run_var 
     rospy.loginfo(data.data)
@@ -38,7 +40,6 @@ def joy_cb(data):
     global joy_r_v_avg
     global joy_r_h_avg
     global joy_meas_id
-
     dt = (float(data.header.stamp.secs)+(float(float(data.header.stamp.nsecs)/1000000000))) - previous_t
     previous_t = (float(data.header.stamp.secs)+(float(float(data.header.stamp.nsecs)/1000000000)))
     joy_raw_r_v = data.axes[3]
@@ -72,17 +73,17 @@ def joy_cb(data):
     joy_r_h_avg = joy_r_prev_h
     joy_r_prev_v = sum(joy_r_v)/len(joy_r_v)
     joy_r_prev_h = sum(joy_r_h)/len(joy_r_h)
-    
+
 def point():
     global joy_r_v_avg
     global joy_r_h_avg
     global commanded_elev
     global commanded_azim
     rospy.init_node('manual_arm_control')
-
-    pub = rospy.Publisher('/arm_twist', JointTrajectoryPoint, queue_size=10)
+    rate = rospy.Rate(50)
+    pub = rospy.Publisher('/arm_twist', JointTrajectoryPoint, queue_size=1)
     rospy.Subscriber('/arm_start_stop', Bool, run_cb)
-    rospy.Subscriber("/joystick_local", Joy, joy_cb)
+    rospy.Subscriber("/joystick", Joy, joy_cb)
 
     MAX_AZIM = rospy.get_param("/max_azimuth", np.pi*2)
     MIN_AZIM = rospy.get_param("/min_azimuth", -np.pi*2)
@@ -90,7 +91,7 @@ def point():
     MIN_ELEV = rospy.get_param("/min_elevation", -np.pi/4)
     AZIM_MAX_SPEED = rospy.get_param("/max_azimuth_speed", np.pi/2)
     ELEV_MAX_SPEED = rospy.get_param("/max_elev_speed", np.pi/16)
-
+    
     while not rospy.is_shutdown():
         
         if run_var==True:
@@ -124,10 +125,9 @@ def point():
             p.positions = [commanded_azim, commanded_elev]
             p.velocities = [commanded_azim_speed*8, commanded_elev_speed*2]
             p.accelerations = [0,0]
-            p.time_from_start = rospy.Time.now()
-            rospy.loginfo("%s ", p)
+            #p.time_from_start = rospy.Time.now()
             pub.publish(p)
-        
+            rate.sleep() 
         '''elif run_var == False:''' #TODO Set zero to current joint positions to avoid jumps
 
 
